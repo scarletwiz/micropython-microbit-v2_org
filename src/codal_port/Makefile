@@ -39,6 +39,11 @@ INC += -I$(NRFX_DIR)/hal
 INC += -I$(NRFX_DIR)/mdk
 INC += -I$(TOP)
 INC += -I$(TOP)/ports/nrf
+INC += -I$(TOP)/ports/nrf/modules/machine
+INC += -I$(TOP)/lib/wiznet5k
+INC += -I$(TOP)/lib/wiznet5k/Ethernet
+INC += -I$(TOP)/wiznet5k/Internet/DNS
+INC += -I$(TOP)/wiznet5k/Internet/DHCP
 INC += -I$(BUILD)
 
 # Compiler settings.
@@ -106,6 +111,18 @@ SRC_C += \
 	shared/runtime/gchelper_native.c \
 	shared/runtime/pyexec.c \
 	shared/runtime/stdout_helpers.c \
+	shared/netutils/netutils.c\
+	shared/netutils/dhcpserver.c\
+	shared/readline/readline.c \
+	lib/wiznet5k/Ethernet/W5100/w5100.c\
+	lib/wiznet5k/Ethernet/W5100S/w5100s.c\
+	lib/wiznet5k/Ethernet/W5200/w5200.c\
+	lib/wiznet5k/Ethernet/W5300/w5300.c\
+	lib/wiznet5k/Ethernet/W5500/w5500.c\
+	lib/wiznet5k/Ethernet/socket.c\
+	lib/wiznet5k/Ethernet/wizchip_conf.c\
+	lib/wiznet5k/Internet/DNS/dns.c\
+	lib/wiznet5k/Internet/DHCP/dhcp.c\
 	$(abspath $(NRFX_DIR)/drivers/src/nrfx_nvmc.c) \
 	$(abspath $(LOCAL_LIB_DIR)/sam/main.c) \
 	$(abspath $(LOCAL_LIB_DIR)/sam/reciter.c) \

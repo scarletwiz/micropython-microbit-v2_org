@@ -48,6 +48,17 @@ static inline void mp_hal_unique_id(uint32_t id[2]) {
     id[1] = NRF_FICR->DEVICEID[1];
 }
 
+
+MP_WEAK void mp_hal_get_mac(int idx, uint8_t buf[6]) {
+
+    buf[0] = 0x02; // LAA range
+    buf[1] = 0x00;
+    buf[2] = 0x00;
+    buf[3] = NRF_FICR->DEVICEID[0];
+    buf[4] = NRF_FICR->DEVICEID[1];
+    buf[5] = idx;
+}
+
 static inline uint64_t mp_hal_time_ns(void) {
     // Not currently implemented.
     return 0;

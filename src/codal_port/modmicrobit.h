@@ -231,6 +231,10 @@ void microbit_pin_audio_speaker_enable(bool enable);
 void microbit_pin_audio_select(mp_const_obj_t select, const microbit_pinmode_t *pinmode);
 void microbit_pin_audio_free(void);
 
+mp_obj_t microbit_wiznet_init(void );
+void microbit_wiznet_ctrl_cs (int val);
+void microbit_wiznet_ctrl_rst (int val);
+
 MP_DECLARE_CONST_FUN_OBJ_0(microbit_reset_obj);
 
 #endif // MICROPY_INCLUDED_MICROBIT_MODMICROBIT_H

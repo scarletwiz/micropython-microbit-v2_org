@@ -30,6 +30,8 @@
 #include "microbithal.h"
 #include "modmicrobit.h"
 
+mp_obj_t microbit_spi_init(mp_uint_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args);
+
 typedef struct _microbit_spi_obj_t {
     mp_obj_base_t base;
 } microbit_spi_obj_t;
@@ -42,7 +44,48 @@ STATIC void microbit_spi_check_initialised(void) {
     }
 }
 
-STATIC mp_obj_t microbit_spi_init(mp_uint_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
+void microbit_wiznet_ctrl_rst (int val) {
+	microbit_hal_pin_write(microbit_p12_obj.name, val);
+}
+
+void microbit_wiznet_ctrl_cs (int val) {
+	microbit_hal_pin_write(microbit_p16_obj.name, val);
+}
+
+mp_obj_t microbit_wiznet_init(void) {
+
+    // Parse arguments.
+    // Get pins.
+    const microbit_pin_obj_t *sclk = &microbit_p13_obj;
+    const microbit_pin_obj_t *mosi = &microbit_p15_obj;
+    const microbit_pin_obj_t *miso = &microbit_p14_obj;
+
+	const microbit_pin_obj_t *rst= &microbit_p12_obj;
+	const microbit_pin_obj_t *cs = &microbit_p16_obj;
+
+    // Initialise the pins.
+    // Note: the pins are not freed, so init'ing the SPI a second time on
+    // different pins will leave the old pins still in SPI mode.
+    microbit_obj_pin_acquire(sclk, microbit_pin_mode_spi);
+    microbit_obj_pin_acquire(mosi, microbit_pin_mode_spi);
+    microbit_obj_pin_acquire(miso, microbit_pin_mode_spi);
+
+	microbit_obj_pin_acquire(rst, microbit_pin_mode_write_digital);
+	microbit_obj_pin_acquire(cs , microbit_pin_mode_write_digital);
+
+    // Initialise the SPI bus.
+    int ret = microbit_hal_spi_init(sclk->name, mosi->name, miso->name, MICROPY_HW_WIZNET_SPI_BAUDRATE, 8, 0);
+
+    if (ret != 0) {
+        mp_raise_OSError(ret);
+    }
+
+    microbit_spi_initialised = true;
+
+    return mp_const_none;
+}
+
+mp_obj_t microbit_spi_init(mp_uint_t n_args, const mp_obj_t *pos_args, mp_map_t *kw_args) {
     enum { ARG_baudrate, ARG_bits, ARG_mode, ARG_sclk, ARG_mosi, ARG_miso };
     static const mp_arg_t allowed_args[] = {
         { MP_QSTR_baudrate, MP_ARG_INT, {.u_int = 1000000} },
