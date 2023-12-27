@@ -76,7 +76,7 @@
 #define MICROPY_PY___FILE__                     (0)
 #define MICROPY_PY_MICROPYTHON_MEM_INFO         (1)
 #define MICROPY_PY_COLLECTIONS_ORDEREDDICT      (1)
-#define MICROPY_PY_IO                           (0)
+#define MICROPY_PY_IO                           (1) // 0 -> 1 for. json
 #define MICROPY_PY_SYS_MAXSIZE                  (1)
 #define MICROPY_PY_SYS_PLATFORM                 "microbit"
 
@@ -88,6 +88,74 @@
 #define MICROPY_PY_URANDOM_EXTRA_FUNCS          (1)
 #define MICROPY_PY_MACHINE                      (1)
 #define MICROPY_PY_MACHINE_PULSE                (1)
+
+// WIZNET5K Network
+
+#define WIZCHIP_PREFIXED_EXPORTS  	(1) 
+#define _WIZCHIP_ 	W5100S //W5500
+#define WIZCHIP_YIELD 	mpy_wiznet_yield
+
+#define MICROPY_PY_NETWORK_WIZNET5K 	(1)
+#define MICROPY_PY_NETWORK              (1)
+
+#ifndef MICROPY_PY_USOCKET
+#define MICROPY_PY_USOCKET              (1)
+#endif
+#ifndef MICROPY_PY_USSL
+#define MICROPY_PY_USSL                 (1)
+#endif
+#ifndef MICROPY_PY_UWEBSOCKET
+#define MICROPY_PY_UWEBSOCKET           (0)
+#endif
+#ifndef MICROPY_PY_WEBREPL
+#define MICROPY_PY_WEBREPL              (0) 
+#endif
+
+#ifndef MICROPY_PY_SOCKET
+#define MICROPY_PY_SOCKET               (1)
+#endif
+
+#define MICROPY_PY_UJSON 		(1)
+#define MICROPY_PY_UJSON_SEPARATORS	(1)
+#define MICROPY_PY_UBINASCII		(1)
+#define MICROPY_PY_BUILTINS_BYTES_HEX	(1)
+
+
+#ifndef MICROPY_PY_NETWORK_HOSTNAME_DEFAULT
+#define MICROPY_PY_NETWORK_HOSTNAME_DEFAULT "W5500-EVB"
+#endif
+
+// Wiznet HW config.
+#define MICROPY_HW_WIZNET_SPI_ID            (0)
+#define MICROPY_HW_WIZNET_SPI_BAUDRATE      (70*1000*1000)
+#define MICROPY_HW_WIZNET_SPI_SCK           (18)
+#define MICROPY_HW_WIZNET_SPI_MOSI          (19)
+#define MICROPY_HW_WIZNET_SPI_MISO          (16)
+#define MICROPY_HW_WIZNET_PIN_CS            (17)
+#define MICROPY_HW_WIZNET_PIN_RST           (20)
+	// Connecting the INTN pin enables RECV interrupt handling of incoming data.
+#define MICROPY_HW_WIZNET_PIN_INTN          (21)
+
+#ifndef MICROPY_BOARD_NETWORK_INTERFACES
+#define MICROPY_BOARD_NETWORK_INTERFACES
+#endif
+
+#define MICROPY_PORT_NETWORK_INTERFACES \
+    MICROPY_HW_NIC_WIZNET5K \
+    MICROPY_BOARD_NETWORK_INTERFACES \
+
+
+#if MICROPY_PY_NETWORK_WIZNET5K
+extern const struct _mp_obj_type_t mod_network_nic_type_wiznet5k;
+#define MICROPY_HW_NIC_WIZNET5K             { MP_ROM_QSTR(MP_QSTR_WIZNET5K), MP_ROM_PTR(&mod_network_nic_type_wiznet5k) },
+#else
+#define MICROPY_HW_NIC_WIZNET5K
+#endif
+
+#ifndef MICROPY_BOARD_NETWORK_INTERFACES
+#define MICROPY_BOARD_NETWORK_INTERFACES
+#endif
+
 
 #define MICROPY_HW_ENABLE_RNG                   (1)
 #define MICROPY_MBFS                            (1)
